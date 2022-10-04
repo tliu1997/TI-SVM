@@ -23,15 +23,7 @@ The randomness of splits is fixed (random_state=4), while translated pixels and 
 
 ### Training and testing
 To run the experiments, simply execute the following commands, 
-
-**All SVM-based methods**
 ```
 python main.py
-```
-
-**ResNet**
-```
-python main.py train --save_dir ./result ./result/predictions.npy
-python main.py test --save_dir ./result ./result/predictions.npy
 ```
 

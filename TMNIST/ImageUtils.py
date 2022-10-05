@@ -1,6 +1,7 @@
 import numpy as np
 import random
 from scipy import ndimage
+# np.random.seed(0)
 
 """This script implements the functions for preprocessing.
 """
@@ -15,8 +16,8 @@ def translation_preprocess(image):
         top = random.randint(0, 36)
         image_pad[idx] = np.pad(image[idx], ((top, 36-top), (left, 36-left)))
     # add Gaussian noise to the picture (mean=0, std=0.1)
-    gaus_noise = np.random.normal(0, 0.1, image_pad.shape)
-    image_pad = image_pad + gaus_noise
+    # gaus_noise = np.random.normal(0, 0.1, image_pad.shape)
+    image_pad = image_pad
 
     return image_pad.reshape((image.shape[0], -1))
 
@@ -32,7 +33,7 @@ def rotation_preprocess(image):
         top = int((64 - temp.shape[1]) // 2)
         image_pad[idx] = np.pad(temp, ((top, 64-top-temp.shape[0]), (left, 64-left-temp.shape[1])))
     # add Gaussian noise to the picture (mean=0, std=0.1)
-    gaus_noise = np.random.normal(0, 0.1, image_pad.shape)
-    image_pad = image_pad + gaus_noise
+    # gaus_noise = np.random.normal(0, 0.1, image_pad.shape)
+    image_pad = image_pad
 
     return image_pad.reshape((image.shape[0], -1))

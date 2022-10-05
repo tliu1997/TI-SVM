@@ -11,15 +11,15 @@ def load_data(type):
     """Load the MNIST or EMNIST dataset"""
     if type == 'MNIST':
         mnist = fetch_openml('mnist_784')
-        x = mnist.data.astype('float32')
-        y = mnist.target.astype('int64')
+        x = mnist.data.astype('float32').values
+        y = mnist.target.astype('int64').values
         x = x / 255
         x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=6/7, random_state=4)
     else:
         x_train, y_train = extract_training_samples('letters')
         x_test, y_test = extract_test_samples('letters')
-        x_train = (x_train/255).reshape((-1, 784))
-        x_test = (x_test/255).reshape((-1, 784))
+        x_train = (x_train/255).reshape((-1, 784)).astype('float32')
+        x_test = (x_test/255).reshape((-1, 784)).astype('float32')
 
     return x_train, y_train, x_test, y_test
 

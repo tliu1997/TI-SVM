@@ -4,21 +4,22 @@
 
 ### Prerequisites
 Here we list our running environment:
-- python == 3.7.6
-- numpy == 1.19.0
-- scipy == 1.2.1
-- tensorflow == 1.14.0
-- keras == 2.3.1
-- scikit-learn == 0.22.1
+- python == 3.7.13
+- PyTorch == 1.12.1
+- pytorch-lightning == 1.7.7
+- torchvision == 0.13.1
+- numpy == 1.21.6
+- scipy == 1.7.3
+- scikit-learn == 1.0.2
 - emnist == 0.0
-- matplotlib == 3.0.3
-- tqdm == 4.62.2
+- matplotlib == 3.5.3
+- tqdm == 4.64.1
 
 
 ### Dataset
 The ratio of training set and validation set is always 5:1. 
-In addition, the number of test samples is always the entire test set, which is 10,000 for the MNIST dataset and 20,800 for the EMNIST Letter dataset.
-The randomness of splits is fixed (random_state=4), while translated pixels and rotated degrees (transformed datasets) are random (need to run 10 times to calculate the average and standard deviation).
+In addition, the number of test samples is always the entire test set, which is 10,000 for the MNIST/Transformed MNIST dataset and 20,800 for the EMNIST Letter dataset.
+The randomness of splits is fixed (random_state=4), while translated pixels and rotated degrees (transformed datasets) are random (need to run 5 times to calculate the average and standard deviation).
 
 
 ### Training and testing

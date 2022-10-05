@@ -3,6 +3,12 @@ from sklearn.svm import SVC
 from sklearn.metrics.pairwise import polynomial_kernel
 from sklearn.metrics import accuracy_score
 from scipy import ndimage
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import pairwise_distances
+import pytorch_lightning as pl
+import torch
+from torchvision.models import resnet18
+from torch import nn
 
 
 """This script defines the training, validation and testing process.
@@ -520,3 +526,63 @@ class LRISVM(object):
         y_pred = svclassifier.predict(x)
         eval_acc = accuracy_score(y, y_pred)
         return eval_acc
+
+
+# kNN with tangent distance
+class KNN(object):
+    def __init__(self, metrics):
+        self.metrics = metrics
+
+    def train(self, x, y):
+        neigh = KNeighborsClassifier(n_neighbors=3, metric=self.metrics)
+        neigh.fit(x, y)
+        y_pred = neigh.predict(x)
+        train_acc = accuracy_score(y, y_pred)
+        return neigh, train_acc
+
+    def evaluate(self, x, y, neigh):
+        y_pred = neigh.predict(x)
+        eval_acc = accuracy_score(y, y_pred)
+        return eval_acc
+
+
+# SVM with tangent distance
+class TDSVM(object):
+    def __init__(self, metrics):
+        self.metrics = metrics
+
+    def TD(self, x, y):
+        return np.exp(-pairwise_distances(x, y, metric=self.metrics)**2 / 784)
+
+    def train(self, x, y):
+        svclassifier = SVC(gamma=1, kernel=self.TD)
+        svclassifier.fit(x, y)
+        y_pred = svclassifier.predict(x)
+        train_acc = accuracy_score(y, y_pred)
+        return svclassifier, train_acc
+
+    def evaluate(self, x, y, svclassifier):
+        y_pred = svclassifier.predict(x)
+        eval_acc = accuracy_score(y, y_pred)
+        return eval_acc
+
+
+# ResNet
+class ResNetModel(pl.LightningModule):
+    def __init__(self):
+        super().__init__()
+        self.model = resnet18(num_classes=10)
+        self.model.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        self.loss = nn.CrossEntropyLoss()
+
+    def forward(self, x):
+        return self.model(x)
+
+    def training_step(self, batch, batch_no):
+        x, y = batch
+        logits = self(x)
+        loss = self.loss(logits, y)
+        return loss
+
+    def configure_optimizers(self):
+        return torch.optim.RMSprop(self.parameters(), lr=0.005)
